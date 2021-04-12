@@ -48,7 +48,10 @@ private:
 	// online match
 	IOnlineSessionPtr OnlineSessionInterface;
 
+	TSharedPtr <class FOnlineSessionSearch> OnlineSessionSearch;
+
 	void OnCreateSessionComplete(FName SessionName, bool Succeed);
 	void OnDestroySessionComplete(FName SessionName, bool Succeed);
+	void OnFindSessionsComplete(bool Succeed);
 	void CreateSession();
 };
