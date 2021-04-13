@@ -41,6 +41,8 @@ void UPuzzleGameInstance::Init()
 			OnlineSessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnFindSessionsComplete);
 			
 			OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
+			OnlineSessionSearch->bIsLanQuery = true;
+
 			if(OnlineSessionSearch.IsValid())
 			{
 				OnlineSessionInterface->FindSessions(0, OnlineSessionSearch.ToSharedRef());
@@ -117,12 +119,37 @@ void UPuzzleGameInstance::LoadPauseMenu()
 	}
 }
 
+// callbacks and online functions.
+
+void UPuzzleGameInstance::OnFindSessionsComplete(bool Succeed)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Finish Session Found"));
+	if(Succeed && OnlineSessionSearch.IsValid())
+	{
+		TArray<FOnlineSessionSearchResult> Results = OnlineSessionSearch->SearchResults;
+		for(FOnlineSessionSearchResult& Result : Results)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Session Found %s"),*Result.GetSessionIdStr());
+		}
+	}
+}
+
+void UPuzzleGameInstance::CreateSession()
+{
+		FOnlineSessionSettings OnlineSessionSettings;
+		OnlineSessionSettings.bIsLANMatch = true;
+		OnlineSessionSettings.NumPublicConnections = 4;
+		OnlineSessionSettings.bShouldAdvertise = true;
+		OnlineSessionInterface->CreateSession(0, SESSION_NAME, OnlineSessionSettings);
+}
+
+
 void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeed)
 {
-	if (!Succeed) 
+	if (!Succeed)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Could not create session"));
-		return; 
+		return;
 	}
 	if (MainMenu != nullptr)
 	{
@@ -139,27 +166,8 @@ void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool Succee
 
 void UPuzzleGameInstance::OnDestroySessionComplete(FName SessionName, bool Succeed)
 {
-	if(Succeed)
+	if (Succeed)
 	{
 		CreateSession();
 	}
-}
-
-void UPuzzleGameInstance::OnFindSessionsComplete(bool Succeed)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Finish Session Found"));
-	if(Succeed)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Session Found"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Session NOT Found"));
-	}
-}
-
-void UPuzzleGameInstance::CreateSession()
-{
-		FOnlineSessionSettings OnlineSessionSettings;
-		OnlineSessionInterface->CreateSession(0, SESSION_NAME, OnlineSessionSettings);
 }

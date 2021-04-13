@@ -14,7 +14,7 @@ class MULTIPLAYERCOURSE_API UUW_MainMenu : public UBaseMenuWidget
 {
 	GENERATED_BODY()
 public:
-
+	UUW_MainMenu(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	virtual bool Initialize() override;
@@ -30,14 +30,16 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* JoinWidgetSwitcher;
-	UPROPERTY(meta = (BindWidget))
-		class UEditableText* IpAddressText;
+ 	UPROPERTY(meta = (BindWidget))
+ 		class UPanelWidget* ServerList;
 
 	// estos son los widgets que estan dentro del switcher.
  	UPROPERTY(meta = (BindWidget))
  		class UWidget* JoinMenu;
 	UPROPERTY(meta = (BindWidget))
 		class UWidget* MainMenu;
+
+	TSubclassOf<UUserWidget> ServerListItemClass;
 
 	UFUNCTION()
 		void HostServer();

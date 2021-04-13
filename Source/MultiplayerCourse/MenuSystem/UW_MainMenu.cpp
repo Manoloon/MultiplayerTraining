@@ -2,9 +2,20 @@
 
 #include "UW_MainMenu.h"
 #include "Components/Button.h"
+#include "Uobject/ConstructorHelpers.h"
+#include "W_ServerListItem.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/EditableText.h"
 
+
+UUW_MainMenu::UUW_MainMenu(const FObjectInitializer& ObjectInitializer)
+{
+	static ConstructorHelpers::FClassFinder<UUserWidget>BPServerListItemClass(TEXT("/Game/UI/UWG_Serveritem"));
+	if (BPServerListItemClass.Class)
+	{
+		ServerListItemClass = BPServerListItemClass.Class;
+	}
+}
 
 // inicializa el widget y crea el binding con la funcion hostServer y al menu de join server.
 bool UUW_MainMenu::Initialize()
@@ -48,9 +59,10 @@ void UUW_MainMenu::BackToMainMenu()
 
 void UUW_MainMenu::JoinServer()
 {
-	if(IpAddressText != nullptr && MenuInterface !=nullptr)
- 	{
- 		const FString& IpText = IpAddressText->GetText().ToString();
-		MenuInterface->Join(IpText);
+	if(MenuInterface !=nullptr)
+	{
+		UWorld* World = this->GetWorld();
+		UW_ServerListItem* Item = CreateWidget<UW_ServerListItem>(World, ServerListItemClass);
+		ServerList->AddChild(Item);		
 	}
 }
