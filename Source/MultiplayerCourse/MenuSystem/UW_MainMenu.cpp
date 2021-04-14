@@ -4,6 +4,7 @@
 #include "Components/Button.h"
 #include "Uobject/ConstructorHelpers.h"
 #include "W_ServerListItem.h"
+#include "Components/TextBlock.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/EditableText.h"
 
@@ -48,6 +49,10 @@ void UUW_MainMenu::OpenJoinMenu()
  	if (!ensure(JoinWidgetSwitcher != nullptr)) return;
  	if (!ensure(JoinMenu != nullptr))return;
 	JoinWidgetSwitcher->SetActiveWidget(JoinMenu);
+	if(MenuInterface != nullptr)
+	{
+		MenuInterface->RefreshServerList();
+	}
 }
 
 void UUW_MainMenu::BackToMainMenu()
@@ -61,8 +66,18 @@ void UUW_MainMenu::JoinServer()
 {
 	if(MenuInterface !=nullptr)
 	{
-		UWorld* World = this->GetWorld();
-		UW_ServerListItem* Item = CreateWidget<UW_ServerListItem>(World, ServerListItemClass);
-		ServerList->AddChild(Item);		
+		MenuInterface->Join("");		
 	}
 }
+void UUW_MainMenu::SetServerListItems(TArray<FString>newNames)
+{
+	UWorld* World = this->GetWorld();
+	ServerList->ClearChildren();
+	for(const FString& ServerName : newNames)
+	{	
+		UW_ServerListItem* Item = CreateWidget<UW_ServerListItem>(World, ServerListItemClass);
+		Item->ServerItem->SetText(FText::FromString(ServerName));
+		ServerList->AddChild(Item);
+	}
+}
+

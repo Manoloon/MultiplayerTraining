@@ -16,6 +16,8 @@ class MULTIPLAYERCOURSE_API UUW_MainMenu : public UBaseMenuWidget
 public:
 	UUW_MainMenu(const FObjectInitializer& ObjectInitializer);
 
+	void SetServerListItems(TArray<FString>newNames);
+
 protected:
 	virtual bool Initialize() override;
 private:

@@ -32,6 +32,8 @@ public:
 		virtual void Join(const FString& RemoteAddress) override;
 	UFUNCTION()
 		virtual void LoadMainMenu() override;
+	UFUNCTION()
+		virtual void RefreshServerList() override;
 
 	// son blueprint callables porque se los llama desde el level blueprint. 
 	UFUNCTION(BlueprintCallable)
@@ -41,9 +43,9 @@ public:
 
 private:
 	TSubclassOf<UUserWidget> MainMenuClass;
-	class UBaseMenuWidget* MainMenu;
+	class UUW_MainMenu* MainMenu;
 	TSubclassOf<UUserWidget> PauseMenuClass;
-	UBaseMenuWidget* PauseMenu;
+	class UBaseMenuWidget* PauseMenu;
 
 	// online match
 	IOnlineSessionPtr OnlineSessionInterface;

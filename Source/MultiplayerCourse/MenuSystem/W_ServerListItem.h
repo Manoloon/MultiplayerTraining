@@ -13,5 +13,9 @@ UCLASS()
 class MULTIPLAYERCOURSE_API UW_ServerListItem : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ServerItem;
 	
 };
