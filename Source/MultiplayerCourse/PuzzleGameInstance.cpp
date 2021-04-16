@@ -39,6 +39,7 @@ void UPuzzleGameInstance::Init()
 			OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnCreateSessionComplete);
 			OnlineSessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnDestroySessionComplete);
 			OnlineSessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnFindSessionsComplete);
+			OnlineSessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnJoinSessionComplete);
 		}
 	}
 	else
@@ -63,13 +64,16 @@ void UPuzzleGameInstance::Host()
 	}
 }
 
-void UPuzzleGameInstance::Join(const FString& RemoteAddress)
+void UPuzzleGameInstance::Join(uint32 newIndex)
 {
+	if (!OnlineSessionInterface.IsValid()) { return; }
+	if (!OnlineSessionSearch.IsValid()) { return; }
 	if(MainMenu != nullptr)
 	{
 		MainMenu->Teardown();
-		//MainMenu->SetServerListItems({ "testServer1","testServer2" });
 	}
+	OnlineSessionInterface->JoinSession(0, SESSION_NAME, OnlineSessionSearch->SearchResults[newIndex]);
+
 // 	UEngine* Engine = GetEngine();
 // 	if (!ensure(Engine != nullptr)) return;
 // 	Engine->AddOnScreenDebugMessage(0,2.0f,FColor::Green,FString::Printf(TEXT("Joining to : %s"), *RemoteAddress));
@@ -138,6 +142,24 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool Succeed)
 			ServerNames.Add(Result.GetSessionIdStr());
 		}
 		MainMenu->SetServerListItems(ServerNames);
+	}
+}
+
+void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	if (!OnlineSessionInterface.IsValid()) { return; }
+	FString RemoteSession;
+	if(!OnlineSessionInterface->GetResolvedConnectString(SessionName, RemoteSession))
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Valid Remote Session"));
+		return;
+	}
+	else
+	{
+		APlayerController* PlayerController = GetFirstLocalPlayerController();
+		if (!ensure(PlayerController != nullptr))return;
+
+		PlayerController->ClientTravel(RemoteSession, ETravelType::TRAVEL_Absolute);
 	}
 }
 

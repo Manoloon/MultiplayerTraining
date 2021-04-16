@@ -64,20 +64,30 @@ void UUW_MainMenu::BackToMainMenu()
 
 void UUW_MainMenu::JoinServer()
 {
-	if(MenuInterface !=nullptr)
+	if(SelectedIndex.IsSet())
 	{
-		MenuInterface->Join("");		
+		if (MenuInterface != nullptr)
+		{
+			MenuInterface->Join(SelectedIndex.GetValue());
+		}
 	}
 }
 void UUW_MainMenu::SetServerListItems(TArray<FString>newNames)
 {
 	UWorld* World = this->GetWorld();
 	ServerList->ClearChildren();
+	uint32 Localindex=0;
 	for(const FString& ServerName : newNames)
 	{	
 		UW_ServerListItem* Item = CreateWidget<UW_ServerListItem>(World, ServerListItemClass);
 		Item->ServerItem->SetText(FText::FromString(ServerName));
+		Item->Setup(this, Localindex);
 		ServerList->AddChild(Item);
+		++Localindex;
 	}
 }
 
+void UUW_MainMenu::SetSelectedIndex(uint32 newIndex)
+{
+	SelectedIndex = newIndex;
+}

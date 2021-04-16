@@ -18,6 +18,8 @@ public:
 
 	void SetServerListItems(TArray<FString>newNames);
 
+	void SetSelectedIndex(uint32 newIndex);
+
 protected:
 	virtual bool Initialize() override;
 private:
@@ -51,4 +53,8 @@ private:
 		void BackToMainMenu();
 	UFUNCTION()
 		void JoinServer();
+
+	// TOptional retorna un valor si no es nullptr , si lo es, no retorna nada y por ende no reserva memoria en el heap. 
+	// se puede usar un uint32 basico con un valor en negativo PERO Toptional nos avisa si el valor es un nullptr o no y eso esta bueno.
+	TOptional<uint32>SelectedIndex;
 };
