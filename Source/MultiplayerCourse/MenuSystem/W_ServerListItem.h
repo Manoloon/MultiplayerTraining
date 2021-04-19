@@ -22,6 +22,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* BTN_ServerItem;
 
+	UPROPERTY(BlueprintReadOnly)
+		bool bIsSelected = false;
+
 	void Setup(class UUW_MainMenu* newParent, uint32 newIndex);
 
 private:

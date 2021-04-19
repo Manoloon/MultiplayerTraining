@@ -90,4 +90,17 @@ void UUW_MainMenu::SetServerListItems(TArray<FString>newNames)
 void UUW_MainMenu::SetSelectedIndex(uint32 newIndex)
 {
 	SelectedIndex = newIndex;
+	UpdateServerListChildren();
+}
+
+void UUW_MainMenu::UpdateServerListChildren()
+{
+	for(int32 i=0;i < ServerList->GetChildrenCount();++i)
+	{
+		auto CurrentItem = Cast<UW_ServerListItem>(ServerList->GetChildAt(i));
+		if(CurrentItem != nullptr)
+		{
+			CurrentItem->bIsSelected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
+		}
+	}
 }

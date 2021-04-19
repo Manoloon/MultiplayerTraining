@@ -43,6 +43,8 @@ private:
 	UPROPERTY(meta = (BindWidget))
 		class UWidget* MainMenu;
 
+	void UpdateServerListChildren();
+
 	TSubclassOf<UUserWidget> ServerListItemClass;
 
 	UFUNCTION()
