@@ -73,24 +73,18 @@ void UPuzzleGameInstance::Join(uint32 newIndex)
 		MainMenu->Teardown();
 	}
 	OnlineSessionInterface->JoinSession(0, SESSION_NAME, OnlineSessionSearch->SearchResults[newIndex]);
-
-// 	UEngine* Engine = GetEngine();
-// 	if (!ensure(Engine != nullptr)) return;
-// 	Engine->AddOnScreenDebugMessage(0,2.0f,FColor::Green,FString::Printf(TEXT("Joining to : %s"), *RemoteAddress));
-// 
-// 	APlayerController* PlayerController = GetFirstLocalPlayerController();
-// 	if (!ensure(PlayerController != nullptr))return;
-// 
-// 	PlayerController->ClientTravel(RemoteAddress,ETravelType::TRAVEL_Absolute);
 }
 
 void UPuzzleGameInstance::RefreshServerList()
 {
 	OnlineSessionSearch = MakeShareable(new FOnlineSessionSearch);
-	OnlineSessionSearch->bIsLanQuery = true;
+	//OnlineSessionSearch->bIsLanQuery = true;
 
 	if (OnlineSessionSearch.IsValid())
 	{
+		// this set the search presence
+		OnlineSessionSearch->MaxSearchResults = 100;
+		OnlineSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true,EOnlineComparisonOp::Equals);
 		OnlineSessionInterface->FindSessions(0, OnlineSessionSearch.ToSharedRef());
 		UE_LOG(LogTemp, Warning, TEXT("Start Session Found"));
 	}
@@ -166,9 +160,10 @@ void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessio
 void UPuzzleGameInstance::CreateSession()
 {
 		FOnlineSessionSettings OnlineSessionSettings;
-		OnlineSessionSettings.bIsLANMatch = true;
-		OnlineSessionSettings.NumPublicConnections = 4;
+		OnlineSessionSettings.bIsLANMatch = false;
+		OnlineSessionSettings.NumPublicConnections = 2;
 		OnlineSessionSettings.bShouldAdvertise = true;
+		OnlineSessionSettings.bUsesPresence = true;
 		OnlineSessionInterface->CreateSession(0, SESSION_NAME, OnlineSessionSettings);
 }
 
