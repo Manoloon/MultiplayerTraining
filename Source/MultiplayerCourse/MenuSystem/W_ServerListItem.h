@@ -20,6 +20,15 @@ public:
 	class UTextBlock* ServerItem;
 
 	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* NumPlayers;
+
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* MaxPlayers;
+
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* HostName;
+
+	UPROPERTY(meta = (BindWidget))
 		class UButton* BTN_ServerItem;
 
 	UPROPERTY(BlueprintReadOnly)

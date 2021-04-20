@@ -129,14 +129,17 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool Succeed)
 	if(Succeed && OnlineSessionSearch.IsValid() && MainMenu !=nullptr)
 	{
 		TArray<FOnlineSessionSearchResult> Results = OnlineSessionSearch->SearchResults;
-		TArray<FString>ServerNames;
-		ServerNames.Add("Test Server 1");
-		ServerNames.Add("Test Server 2");
-		ServerNames.Add("Test Server 3");
+		TArray<FServerData>ServerNames;
+		
 		for(FOnlineSessionSearchResult& Result : Results)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Session Found %s"),*Result.GetSessionIdStr());
-			ServerNames.Add(Result.GetSessionIdStr());
+			FServerData LocalData;
+			LocalData.ServerName = Result.GetSessionIdStr();
+			LocalData.HostName = Result.Session.OwningUserName;
+			LocalData.CurrentPlayers = Result.Session.NumOpenPublicConnections;
+			LocalData.MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
+			ServerNames.Add(LocalData);
 		}
 		MainMenu->SetServerListItems(ServerNames);
 	}
@@ -163,7 +166,8 @@ void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessio
 void UPuzzleGameInstance::CreateSession()
 {
 		FOnlineSessionSettings OnlineSessionSettings;
-		OnlineSessionSettings.bIsLANMatch = false;
+		// si no usamos steam como subsystem que sea LAN!
+		OnlineSessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL");
 		OnlineSessionSettings.NumPublicConnections = 2;
 		OnlineSessionSettings.bShouldAdvertise = true;
 		OnlineSessionSettings.bUsesPresence = true;

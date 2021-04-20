@@ -72,15 +72,18 @@ void UUW_MainMenu::JoinServer()
 		}
 	}
 }
-void UUW_MainMenu::SetServerListItems(TArray<FString>newNames)
+void UUW_MainMenu::SetServerListItems(TArray<FServerData>newNames)
 {
 	UWorld* World = this->GetWorld();
 	ServerList->ClearChildren();
 	uint32 Localindex=0;
-	for(const FString& ServerName : newNames)
+	for(const FServerData& ServerData : newNames)
 	{	
 		UW_ServerListItem* Item = CreateWidget<UW_ServerListItem>(World, ServerListItemClass);
-		Item->ServerItem->SetText(FText::FromString(ServerName));
+		Item->ServerItem->SetText(FText::FromString(ServerData.ServerName));
+		Item->ServerItem->SetText(FText::FromString(ServerData.HostName));
+		Item->NumPlayers->SetText(FText::AsNumber(ServerData.CurrentPlayers));
+		Item->MaxPlayers->SetText(FText::AsNumber(ServerData.MaxPlayers));
 		Item->Setup(this, Localindex);
 		ServerList->AddChild(Item);
 		++Localindex;

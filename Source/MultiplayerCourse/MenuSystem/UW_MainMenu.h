@@ -6,6 +6,16 @@
 #include "BaseMenuWidget.h"
 #include "UW_MainMenu.generated.h"
 
+USTRUCT()
+struct FServerData
+{
+	GENERATED_BODY()
+
+	FString ServerName;
+	uint16 CurrentPlayers;
+	uint16 MaxPlayers;
+	FString HostName;
+};
 /**
  * 
  */
@@ -16,7 +26,7 @@ class MULTIPLAYERCOURSE_API UUW_MainMenu : public UBaseMenuWidget
 public:
 	UUW_MainMenu(const FObjectInitializer& ObjectInitializer);
 
-	void SetServerListItems(TArray<FString>newNames);
+	void SetServerListItems(TArray<FServerData>newNames);
 
 	void SetSelectedIndex(uint32 newIndex);
 
