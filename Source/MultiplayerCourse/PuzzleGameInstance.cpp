@@ -12,6 +12,7 @@
 #include "OnlineSubsystem.h"
 
 const static FName SESSION_NAME = TEXT("Horde Play Session");
+const static FName SERVER_NAME_SETTING_KEY = TEXT("Server Name");
 
 UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -48,10 +49,11 @@ void UPuzzleGameInstance::Init()
 	}
 }
 
-void UPuzzleGameInstance::Host()
+void UPuzzleGameInstance::Host(FString newServerName)
 {
 	if(OnlineSessionInterface.IsValid())
 	{
+		DesiredServerName = newServerName;
 		FNamedOnlineSession* ExistingSession = OnlineSessionInterface->GetNamedSession(SESSION_NAME);
 		if(ExistingSession !=nullptr)
 		{
@@ -135,10 +137,20 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool Succeed)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Session Found %s"),*Result.GetSessionIdStr());
 			FServerData LocalData;
-			LocalData.ServerName = Result.GetSessionIdStr();
+			
 			LocalData.HostName = Result.Session.OwningUserName;
-			LocalData.CurrentPlayers = Result.Session.NumOpenPublicConnections;
 			LocalData.MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
+			// esto funciona bien con el subsystem de steam, el null tiene un bug con este tema.
+			LocalData.CurrentPlayers = LocalData.MaxPlayers - Result.Session.NumOpenPublicConnections;
+			FString ServerName;
+			if (Result.Session.SessionSettings.Get(SERVER_NAME_SETTING_KEY, ServerName))
+			{
+				LocalData.ServerName = ServerName;
+			}
+			else
+			{
+				LocalData.ServerName = "Name couldnt found";
+			}
 			ServerNames.Add(LocalData);
 		}
 		MainMenu->SetServerListItems(ServerNames);
@@ -171,6 +183,7 @@ void UPuzzleGameInstance::CreateSession()
 		OnlineSessionSettings.NumPublicConnections = 2;
 		OnlineSessionSettings.bShouldAdvertise = true;
 		OnlineSessionSettings.bUsesPresence = true;
+		OnlineSessionSettings.Set(SERVER_NAME_SETTING_KEY,DesiredServerName,EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
 		OnlineSessionInterface->CreateSession(0, SESSION_NAME, OnlineSessionSettings);
 }
 

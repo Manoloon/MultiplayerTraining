@@ -28,7 +28,7 @@ public:
 	virtual void Init() override;
 
 	UFUNCTION()
-		virtual void Host() override;
+		virtual void Host(FString newServerName) override;
 	UFUNCTION()
 		virtual void Join(uint32 newIndex) override;
 	UFUNCTION()
@@ -57,5 +57,7 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool Succeed);
 	void OnFindSessionsComplete(bool Succeed);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+
+	FString DesiredServerName;
 	void CreateSession();
 };

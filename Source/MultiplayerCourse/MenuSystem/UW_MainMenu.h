@@ -41,17 +41,26 @@ private:
  		class UButton* BTN_Connect;
  	UPROPERTY(meta = (BindWidget))
  		class UButton* BTN_Cancel;
+	UPROPERTY(meta = (BindWidget))
+		class UButton* BTN_CreateSession;
+	UPROPERTY(meta = (BindWidget))
+		class UButton* BTN_HostCancel;
 
 	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* JoinWidgetSwitcher;
  	UPROPERTY(meta = (BindWidget))
  		class UPanelWidget* ServerList;
 
+	UPROPERTY(meta = (BindWidget))
+		class UEditableText* txt_NameServer;
+
 	// estos son los widgets que estan dentro del switcher.
  	UPROPERTY(meta = (BindWidget))
  		class UWidget* JoinMenu;
 	UPROPERTY(meta = (BindWidget))
 		class UWidget* MainMenu;
+	UPROPERTY(meta = (BindWidget))
+		class UWidget* HostMenu;
 
 	void UpdateServerListChildren();
 
@@ -61,6 +70,8 @@ private:
 		void HostServer();
 	UFUNCTION()
 		void OpenJoinMenu();
+	UFUNCTION()
+		void OpenHostMenu();
 	UFUNCTION()
 		void BackToMainMenu();
 	UFUNCTION()

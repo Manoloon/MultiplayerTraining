@@ -24,11 +24,14 @@ bool UUW_MainMenu::Initialize()
 	bool Success = Super::Initialize();
 	if (!Success) { return false; }
 	if (!ensure(BTN_Host != nullptr)) return false;
-	BTN_Host->OnClicked.AddDynamic(this, &UUW_MainMenu::HostServer);
+	BTN_Host->OnClicked.AddDynamic(this, &UUW_MainMenu::OpenHostMenu);
+		if (!ensure(BTN_CreateSession != nullptr)) return false;
+	BTN_CreateSession->OnClicked.AddDynamic(this, &UUW_MainMenu::HostServer);
 	if (!ensure(BTN_Join != nullptr)) return false;
 	BTN_Join->OnClicked.AddDynamic(this, &UUW_MainMenu::OpenJoinMenu);
 	if (!ensure(BTN_Cancel != nullptr)) return false;
 	BTN_Cancel->OnClicked.AddDynamic(this, &UUW_MainMenu::BackToMainMenu);
+	BTN_HostCancel->OnClicked.AddDynamic(this, &UUW_MainMenu::BackToMainMenu);
 	if(!ensure(BTN_Connect !=nullptr))return false;
 	BTN_Connect->OnClicked.AddDynamic(this, &UUW_MainMenu::JoinServer);
 	return true;
@@ -39,9 +42,9 @@ void UUW_MainMenu::HostServer()
 {
 	if (MenuInterface != nullptr)
 	{
-		MenuInterface->Host();
+		FString newServerName = txt_NameServer->Text.ToString();
+		MenuInterface->Host(newServerName);
 	}
-
 }
 // abre el menu de join -> ip address call.
 void UUW_MainMenu::OpenJoinMenu()
@@ -53,6 +56,13 @@ void UUW_MainMenu::OpenJoinMenu()
 	{
 		MenuInterface->RefreshServerList();
 	}
+}
+
+void UUW_MainMenu::OpenHostMenu()
+{
+	if (!ensure(JoinWidgetSwitcher != nullptr)) return;
+	if (!ensure(HostMenu != nullptr))return;
+	JoinWidgetSwitcher->SetActiveWidget(HostMenu);
 }
 
 void UUW_MainMenu::BackToMainMenu()
