@@ -52,7 +52,7 @@ private:
  		class UPanelWidget* ServerList;
 
 	UPROPERTY(meta = (BindWidget))
-		class UEditableText* txt_NameServer;
+		class UEditableTextBox* NameServerBox;
 
 	// estos son los widgets que estan dentro del switcher.
  	UPROPERTY(meta = (BindWidget))

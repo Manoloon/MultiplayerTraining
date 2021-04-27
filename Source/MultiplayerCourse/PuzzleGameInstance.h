@@ -48,6 +48,8 @@ private:
 	TSubclassOf<UUserWidget> PauseMenuClass;
 	class UBaseMenuWidget* PauseMenu;
 
+	FString TravelURL = "/Game/Maps/M_Lobby?listen";
+
 	// online match
 	IOnlineSessionPtr OnlineSessionInterface;
 

@@ -6,7 +6,7 @@
 #include "W_ServerListItem.h"
 #include "Components/TextBlock.h"
 #include "Components/WidgetSwitcher.h"
-#include "Components/EditableText.h"
+#include "Components/EditableTextBox.h"
 
 
 UUW_MainMenu::UUW_MainMenu(const FObjectInitializer& ObjectInitializer)
@@ -42,7 +42,7 @@ void UUW_MainMenu::HostServer()
 {
 	if (MenuInterface != nullptr)
 	{
-		FString newServerName = txt_NameServer->Text.ToString();
+		FString newServerName = NameServerBox->Text.ToString();
 		MenuInterface->Host(newServerName);
 	}
 }
@@ -86,12 +86,14 @@ void UUW_MainMenu::SetServerListItems(TArray<FServerData>newNames)
 {
 	UWorld* World = this->GetWorld();
 	ServerList->ClearChildren();
+
 	uint32 Localindex=0;
 	for(const FServerData& ServerData : newNames)
 	{	
 		UW_ServerListItem* Item = CreateWidget<UW_ServerListItem>(World, ServerListItemClass);
+
 		Item->ServerItem->SetText(FText::FromString(ServerData.ServerName));
-		Item->ServerItem->SetText(FText::FromString(ServerData.HostName));
+		Item->HostName->SetText(FText::FromString(ServerData.HostName));
 		Item->NumPlayers->SetText(FText::AsNumber(ServerData.CurrentPlayers));
 		Item->MaxPlayers->SetText(FText::AsNumber(ServerData.MaxPlayers));
 		Item->Setup(this, Localindex);
