@@ -47,6 +47,10 @@ void UPuzzleGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Online Subsystem NOT FOUND"));
 	}
+	if(GEngine != nullptr)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this, &UPuzzleGameInstance::OnNetworkFailure);
+	}
 }
 
 void UPuzzleGameInstance::Host(FString newServerName)
@@ -183,6 +187,13 @@ void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessio
 
 		PlayerController->ClientTravel(RemoteSession, ETravelType::TRAVEL_Absolute);
 	}
+}
+
+void UPuzzleGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	//TODO : Crear widget que informe al jugador que se corto la conexion .
+	LoadMainMenu();
+	UE_LOG(LogTemp, Warning, TEXT("YOU HAVE BEEN DISCONNECTED"));
 }
 
 void UPuzzleGameInstance::CreateSession()
