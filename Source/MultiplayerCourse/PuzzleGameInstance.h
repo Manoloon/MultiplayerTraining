@@ -42,6 +42,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void LoadPauseMenu();
 
+	void StartSession();
+
 private:
 	TSubclassOf<UUserWidget> MainMenuClass;
 	class UUW_MainMenu* MainMenu;

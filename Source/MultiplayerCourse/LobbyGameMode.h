@@ -21,4 +21,6 @@ public:
 private:
 	uint32 NumOfPlayers = 0;
 	FString TravelURL = "/Game/Maps/M_Playground?listen";
+
+	void TravelToMap();
 };

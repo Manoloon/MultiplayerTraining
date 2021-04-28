@@ -123,6 +123,14 @@ void UPuzzleGameInstance::LoadPauseMenu()
 	}
 }
 
+void UPuzzleGameInstance::StartSession()
+{
+	if(OnlineSessionInterface.IsValid())
+	{
+		OnlineSessionInterface->StartSession(SESSION_NAME);
+	}
+}
+
 // callbacks and online functions.
 
 void UPuzzleGameInstance::OnFindSessionsComplete(bool Succeed)
